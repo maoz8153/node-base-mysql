@@ -30,8 +30,10 @@ export class NodeServer {
         this.app = express();
     }
 
-    private initDbConnection() {
-        createConnection();
+    initDbConnection() {
+        createConnection().then(async connection => {
+            console.log(connection);
+        }).catch(error => console.log("Error: ", error));
     }
 
     private initEnvSettings(): void {

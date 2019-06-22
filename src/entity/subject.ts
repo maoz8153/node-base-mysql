@@ -15,6 +15,6 @@ export class Subject {
     user: User;
 
     @OneToMany(type => Task, task => task.subject)
-    tasks: Task[] = [];
+    tasks: Task[];
 
 }

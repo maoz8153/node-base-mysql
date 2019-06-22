@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { getRepository, Repository, getConnection } from 'typeorm';
 import { User } from '../entity/user';
+import { IUser } from '../models/user.model';
 
 export class UserController {
 
@@ -65,8 +66,11 @@ export class UserController {
         return await this.userRepo().findOne(userId);
     }
 
-    private async _createUser(newUser: User): Promise<User> {
-        const user = await this.userRepo().create(newUser);
+    private async _createUser(newUser: IUser): Promise<User> {
+        const user = new User();
+        user.firstName = newUser.firstName;
+        user.gender = newUser.gender;
+        user.lastName = newUser.lastName;
         return await this.userRepo().save(user);
 
     }

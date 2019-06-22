@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
 import { getRepository, Repository, getConnection } from 'typeorm';
 import { Task } from '../entity/task';
+import { ITask } from '../models/task.model';
+import { Subject } from '../entity/subject';
 
 export class TaskController {
 
@@ -9,6 +11,10 @@ export class TaskController {
 
     taskRepo() {
         return getRepository(Task);
+    }
+
+    subjectRepo() {
+        return getRepository(Subject);
     }
 
     public async getTaskListBySubject(request: Request, responce: Response) {
@@ -55,8 +61,12 @@ export class TaskController {
         return await this.taskRepo().createQueryBuilder('task').where('task.subjectId = :id', { id: subjectId }).getMany();
     }
 
-    private async _createTask(newTask: Task): Promise<Task> {
-        const task = await this.taskRepo().create(newTask);
+    private async _createTask(newTask: ITask): Promise<Task> {
+        const subject = await this.subjectRepo().findOne(newTask.subjectId);
+        const task = new Task();
+        task.subject = subject;
+        task.title = newTask.title;
+        task.complited = newTask.complited;
         return await this.taskRepo().save(task);
     }
 

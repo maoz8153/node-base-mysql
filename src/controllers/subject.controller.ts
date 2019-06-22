@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import { getRepository, Repository, getConnection } from 'typeorm';
 import { Subject } from '../entity/subject';
 import { User } from '../entity/user';
+import { ISubject } from '../models/subject.model';
 
 export class SubjectController {
 
@@ -36,7 +37,7 @@ export class SubjectController {
 
     public async createSubject(request: Request, responce: Response) {
         try {
-            const result = await this._createSubject(request.body, request.body.userId);
+            const result = await this._createSubject(request.body);
             responce.send(result);
         } catch (error) {
             responce.status(500).send(error);
@@ -88,13 +89,15 @@ export class SubjectController {
     //     return await aggQry.exec();
     // }
 
-    private async _getSubjectListByUserId(userId: string): Promise<any[]> {
+    private async _getSubjectListByUserId(userId: string): Promise<Subject[]> {
         return await this.subjectRepo().createQueryBuilder('subject').where('subject.userId = :id', { id: userId }).getMany();
     }
 
-    private async _createSubject(newSubject: Subject, userId: string): Promise<any> {
-        const user = await this.userRepo().findOne(userId);
-        const subject = await this.subjectRepo().create(newSubject);
+    private async _createSubject(newSubject: ISubject): Promise<any> {
+        const user = await this.userRepo().findOne(newSubject.userId);
+        const subject = new Subject();
+        subject.user = user;
+        subject.title = newSubject.title;
         return await this.subjectRepo().save(subject);
     }
 

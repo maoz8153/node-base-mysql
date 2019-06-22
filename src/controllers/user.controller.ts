@@ -7,7 +7,7 @@ export class UserController {
 
     constructor() { }
 
-    userRep() {
+    userRepo() {
         return getRepository(User);
     }
 
@@ -58,27 +58,27 @@ export class UserController {
     }
 
     private async _getUserList(): Promise<User[]> {
-        return await this.userRep().find();
+        return await this.userRepo().find();
     }
 
     private async _getUserById(userId: string): Promise<User> {
-        return await this.userRep().findOne(userId);
+        return await this.userRepo().findOne(userId);
     }
 
     private async _createUser(newUser: User): Promise<User> {
-        const user = await this.userRep().create(newUser);
-        return await this.userRep().save(user);
+        const user = await this.userRepo().create(newUser);
+        return await this.userRepo().save(user);
 
     }
 
     private async _updateUser(user: User): Promise<User> {
-        const userDb = await this.userRep().findOne(user.id);
-        await this.userRep().merge(userDb, user);
-        return await this.userRep().save(user);
+        const userDb = await this.userRepo().findOne(user.id);
+        await this.userRepo().merge(userDb, user);
+        return await this.userRepo().save(user);
     }
 
     private async _deleteUser(userId: string): Promise<any> {
-        const user = await this.userRep().findOne(userId);
-        return await this.userRep().remove(user);
+        const user = await this.userRepo().findOne(userId);
+        return await this.userRepo().remove(user);
     }
 }

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { getRepository, Repository, getConnection } from 'typeorm';
 import { Subject } from '../entity/subject';
+import { User } from '../entity/user';
 
 export class SubjectController {
 
@@ -9,6 +10,10 @@ export class SubjectController {
 
     subjectRepo() {
         return getRepository(Subject);
+    }
+
+    userRepo() {
+        return getRepository(User);
     }
 
     public async getSubjectListByUserId(request: Request, responce: Response) {
@@ -31,7 +36,7 @@ export class SubjectController {
 
     public async createSubject(request: Request, responce: Response) {
         try {
-            const result = await this._createSubject(request.body);
+            const result = await this._createSubject(request.body, request.body.userId);
             responce.send(result);
         } catch (error) {
             responce.status(500).send(error);
@@ -87,7 +92,8 @@ export class SubjectController {
         return await this.subjectRepo().createQueryBuilder('subject').where('subject.userId = :id', { id: userId }).getMany();
     }
 
-    private async _createSubject(newSubject: Subject): Promise<any> {
+    private async _createSubject(newSubject: Subject, userId: string): Promise<any> {
+        const user = await this.userRepo().findOne(userId);
         const subject = await this.subjectRepo().create(newSubject);
         return await this.subjectRepo().save(subject);
     }

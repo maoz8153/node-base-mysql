@@ -17,7 +17,7 @@ export class User {
     gender: string;
 
     @OneToMany(type => Subject, subject => subject.user)
-    subjects: Subject[];
+    subjects: Subject[] = [];
 
 }
 

@@ -6,6 +6,8 @@ import "reflect-metadata";
 import { createConnection } from "typeorm";
 import { IConfig, ConfigService } from './core/config.service.core';
 import { UserRoute } from './routes/user.route';
+import { SubjectRoute } from './routes/subject.route';
+import { TaskRoute } from './routes/task.route';
 
 
 
@@ -33,7 +35,9 @@ export class NodeServer {
     initDbConnection() {
         createConnection().then(async connection => {
             console.log(connection);
-        }).catch(error => console.log("Error: ", error));
+        }).catch(error =>
+            console.log("Error: ", error)
+        );
     }
 
     private initEnvSettings(): void {
@@ -60,6 +64,8 @@ export class NodeServer {
     private initRoutes(): void {
         this.router = Router();
         new UserRoute(this.app);
+        new SubjectRoute(this.app);
+        new TaskRoute(this.app);
         this.app.use(this.router);
     }
 

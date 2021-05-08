@@ -17,7 +17,7 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "sqlite3": "^4.0.8",
-    "typeorm": "^0.2.18"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "typescript": "~2.5.0",
